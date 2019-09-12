@@ -11,7 +11,7 @@
       path: /etc/hosts
       block: |
         192.168.122.75 master
-        #192.168.122.20 worker 
+        192.168.122.7 worker 
 
   - name: create user vagrant
     user:
@@ -79,7 +79,7 @@
   - name: setup calico
     command: kubectl --kubeconfig /home/vagrant/.kube/config apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
 
-- hosts: worker
+- hosts: awx-client2
   tasks:
 
   - name: set hostname
@@ -90,8 +90,12 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        192.168.33.10 master
-        192.168.33.20 worker
+        192.168.122.75 master
+        192.168.122.7 worker
+
+- name: create user vagrant
+    user:
+      name: vagrant
 
   - name: install docker
     apt:
@@ -131,7 +135,7 @@
   - name: k8s token
     command: kubeadm token create --print-join-command
     register: token
-    delegate_to: "{{ groups['master'][0] }}"
+    delegate_to: "{{ groups['awx-client1'][0] }}"
 
   - name: join master
     command: "{{ token.stdout }}"
