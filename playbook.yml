@@ -10,7 +10,7 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        192.168.122.95 master
+        192.168.122.64 master
         192.168.122.7 worker 
 
   - name: create user vagrant
@@ -47,7 +47,7 @@
       name: kubectl
 
   - name: run kubeadm
-    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address 192.168.122.95
+    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address 192.168.122.64
     args: 
       creates: /etc/kubernetes/admin.conf
 
@@ -90,7 +90,7 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        192.168.122.95 master
+        192.168.122.64 master
         192.168.122.7 worker
 
 - name: create user vagrant
