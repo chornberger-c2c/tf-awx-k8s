@@ -1,5 +1,6 @@
 ---
 - hosts: awx-client1
+  gather_facts: yes
   tasks: 
 
   - name: set hostname
@@ -80,6 +81,7 @@
     command: kubectl --kubeconfig /home/vagrant/.kube/config apply -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
 
 - hosts: awx-client2
+  gather_facts: yes
   tasks:
 
   - name: set hostname
