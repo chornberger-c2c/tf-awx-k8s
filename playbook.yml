@@ -11,8 +11,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        "{{ hostvars['awx-client1'].ansible_default_ipv4.address }}" master
-        "{{ hostvars['awx-client2'].ansible_default_ipv4.address }}" worker
+        "{{ hostvars['awx-client1'].ip }}" master
+        "{{ hostvars['awx-client2'].ip }}" worker
 
   - name: create user vagrant
     user:
@@ -48,7 +48,7 @@
       name: kubectl
 
   - name: run kubeadm
-    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address "{{ hostvars['awx-client1'].ansible_default_ipv4.address }}"
+    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address "{{ hostvars['awx-client1'].ip }}"
     args: 
       creates: /etc/kubernetes/admin.conf
 
@@ -92,8 +92,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        "{{ hostvars['awx-client1'].ansible_default_ipv4.address }}" master
-        "{{ hostvars['awx-client2'].ansible_default_ipv4.address }}" worker
+        "{{ hostvars['awx-client1'].ip }}" master
+        "{{ hostvars['awx-client2'].ip }}" worker
         
   - name: create user vagrant
     user:
