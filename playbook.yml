@@ -14,8 +14,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        "{{ hostvars['awx-client1'].['ansible_facts']['eth0']['ipv4']['address'] }}" master
-        "{{ hostvars['awx-client2'].['ansible_facts']['eth0']['ipv4']['address'] }}" worker
+        "{{ hostvars['awx-client1']['ansible_facts']['eth0']['ipv4']['address'] }}" master
+        "{{ hostvars['awx-client2']['ansible_facts']['eth0']['ipv4']['address'] }}" worker
 
   - name: create user vagrant
     user:
