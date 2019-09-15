@@ -14,8 +14,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        "{{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }}" master
-        "{{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }}" worker
+        {{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }} master
+        {{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }} worker
 
   - name: create user vagrant
     user:
@@ -95,8 +95,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        "{{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }}" master
-        "{{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }}" worker
+        {{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }} master
+        {{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }} worker
         
   - name: create user vagrant
     user:
@@ -140,7 +140,7 @@
   - name: k8s token
     command: kubeadm token create --print-join-command
     register: token
-    delegate_to: "{{ groups['awx-client1'][0] }}"
+    delegate_to: "{{ hostvars['awx-client1'] }}"
 
   - name: join master
     command: "{{ token.stdout }}"
