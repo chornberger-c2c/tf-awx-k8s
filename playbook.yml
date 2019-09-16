@@ -140,7 +140,7 @@
   - name: k8s token
     command: kubeadm token create --print-join-command
     register: token
-    delegate_to: "{{ hostvars['awx-client1'] }}"
+    delegate_to: awx-client1
 
   - name: join master
     command: "{{ token.stdout }}"
