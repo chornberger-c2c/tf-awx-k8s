@@ -2,7 +2,7 @@
 - hosts: all
   gather_facts: yes
 
-- hosts: awx-client1
+- hosts: k8s-master
   gather_facts: yes
   tasks: 
 
@@ -14,8 +14,8 @@
     blockinfile:
       path: /etc/hosts
       block: |
-        {{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }} master
-        {{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }} worker
+        {{ hostvars['k8s-master']['ansible_facts']['ens3']['ipv4']['address'] }} k8s-master
+        {{ hostvars['k8s-worker']['ansible_facts']['ens3']['ipv4']['address'] }} k8s-worker
 
   - name: create user vagrant
     user:
@@ -51,7 +51,7 @@
       name: kubectl
 
   - name: run kubeadm
-    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address "{{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }}"
+    command: kubeadm init --pod-network-cidr "192.168.0.0/16" --apiserver-advertise-address "{{ hostvars['k8s-master']['ansible_facts']['ens3']['ipv4']['address'] }}"
     args: 
       creates: /etc/kubernetes/admin.conf
 
@@ -83,20 +83,20 @@
   - name: setup calico
     command: kubectl --kubeconfig /home/vagrant/.kube/config apply -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
 
-- hosts: awx-client2
+- hosts: k8s-worker
   gather_facts: yes
   tasks:
 
   - name: set hostname
     hostname:
-      name: worker
+      name: k8s-worker
 
   - name: set /etc/hosts
     blockinfile:
       path: /etc/hosts
       block: |
-        {{ hostvars['awx-client1']['ansible_facts']['ens3']['ipv4']['address'] }} master
-        {{ hostvars['awx-client2']['ansible_facts']['ens3']['ipv4']['address'] }} worker
+        {{ hostvars['k8s-master']['ansible_facts']['ens3']['ipv4']['address'] }} k8s-master
+        {{ hostvars['k8s-worker']['ansible_facts']['ens3']['ipv4']['address'] }} k8s-worker
         
   - name: create user vagrant
     user:
@@ -140,7 +140,7 @@
   - name: k8s token
     command: kubeadm token create --print-join-command
     register: token
-    delegate_to: awx-client1
+    delegate_to: k8s-master
 
   - name: join master
     command: "{{ token.stdout }}"
