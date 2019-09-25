@@ -1,6 +1,6 @@
 ---
-#- hosts: all
-#  gather_facts: yes
+- hosts: all
+  gather_facts: yes
 
 - hosts: k8s-master
   gather_facts: yes
